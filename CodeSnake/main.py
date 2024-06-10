@@ -5,9 +5,9 @@ balloon_param = [name -> str, pos_x -> float, pos_y -> float, K -> int, ...]
 """
 
 if __name__ == "__main__":
-    I = cv2.imread("./Images/im1.png", 0)
+    I = cv2.imread("./Images/im9.png", 0)
     I = cv2.normalize(I, None, 0, 1.0, cv2.NORM_MINMAX, dtype=cv2.CV_32F)
-    balloon_param = ["circle", 100, len(I)/2, len(I[0])/2 - 25, 10]
+    balloon_param = ["circle", 100, len(I)/2, len(I[0])/2, 10]
     param = {
         "alpha": 0.001,
         "beta": 0.0001,
