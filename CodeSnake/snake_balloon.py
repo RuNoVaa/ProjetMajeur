@@ -118,46 +118,33 @@ def snake_balloon_3D(I, balloon_param, param):
     IMAGES.append(norm_grad)
 
     A = update_A(K, alpha, beta, dt)
-
-    x = np.reshape(x, (1, K*K))
-    y = np.reshape(y, (1, K*K))
-    z = np.reshape(z, (1, K*K))
+    # x = np.reshape(x, (1, K*K*K))
+    # y = np.reshape(y, (1, K*K*K))
+    # z = np.reshape(z, (1, K*K*K))
 
     CONTOUR_IMAGE = []
 
-    # for i in range(iteration):
-    #     ti_more_x = np.roll(x, - 1)
-    #     ti_minus_x = np.roll(x, 1)
-    #     ti_more_y = np.roll(y, - 1)
-    #     ti_minus_y = np.roll(y, 1) 
-    #     ti_more_z = np.roll(z, - 1)
-    #     ti_minus_z = np.roll(z, 1)
-    #     ti_x = ti_more_x - ti_minus_x
-    #     ti_y = ti_more_y - ti_minus_y 
+    for i in range(iteration):
+        x, y, z = 
 
-    #     norm_ti = np.sqrt(ti_x**2 + ti_y**2)
+        xi = np.dot(A, x + dt*gamma*(grad_x[x.astype(int),y.astype(int)] + kappa*n_x))
+        yi = np.dot(A, y + dt*gamma*(grad_y[x.astype(int),y.astype(int)] + kappa*n_y))
 
-    #     n_x = -ti_y/norm_ti
-    #     n_y = ti_x/norm_ti
+        x = xi
+        y = yi
 
-    #     xi = np.dot(A, x + dt*gamma*(grad_x[x.astype(int),y.astype(int)] + kappa*n_x))
-    #     yi = np.dot(A, y + dt*gamma*(grad_y[x.astype(int),y.astype(int)] + kappa*n_y))
-
-    #     x = xi
-    #     y = yi
-
-    #     c = list()
-    #     cc = np.zeros((K, 1, 2))
-    #     cc[:,0,0] = y
-    #     cc[:,0,1] = x 
-    #     c.append(cc.astype(int))
+        c = list()
+        cc = np.zeros((K, 1, 2))
+        cc[:,0,0] = y
+        cc[:,0,1] = x 
+        c.append(cc.astype(int))
 
         
-    #     if i % 100 == 0:
-    #         I_c = cv2.drawContours(image=cv2.cvtColor(I, cv2.COLOR_GRAY2BGR), contours=c, contourIdx=-1, color=(255, 0, 0), thickness=2, lineType=cv2.LINE_AA)
-    #         I_c = cv2.putText(I_c, f"Iteration: {i}", (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 0, 0), 1, cv2.LINE_AA)
-    #         I_c = cv2.putText(I_c, f"alpha: {alpha}", (0, 9*int(scale_x)), cv2.FONT_HERSHEY_SIMPLEX, 4/np.sqrt(scale_x*scale_y), (255, 0, 0), 1, cv2.LINE_AA)
+        if i % 100 == 0:
+            I_c = cv2.drawContours(image=cv2.cvtColor(I, cv2.COLOR_GRAY2BGR), contours=c, contourIdx=-1, color=(255, 0, 0), thickness=2, lineType=cv2.LINE_AA)
+            I_c = cv2.putText(I_c, f"Iteration: {i}", (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 0, 0), 1, cv2.LINE_AA)
+            I_c = cv2.putText(I_c, f"alpha: {alpha}", (0, 9*int(scale_x)), cv2.FONT_HERSHEY_SIMPLEX, 4/np.sqrt(scale_x*scale_y), (255, 0, 0), 1, cv2.LINE_AA)
 
-    #         CONTOUR_IMAGE.append(I_c)
+            CONTOUR_IMAGE.append(I_c)
 
     return IMAGES, CONTOUR_IMAGE
