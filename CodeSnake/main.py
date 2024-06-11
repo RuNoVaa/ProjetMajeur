@@ -5,7 +5,7 @@ balloon_param = [name -> str, pos_x -> float, pos_y -> float, K -> int, ...]
 """
 
 if __name__ == "__main__":
-    I = cv2.imread("./Images/im1.png", 0)
+    I = cv2.imread("./CodeSnake/Images/im1.png", 0)
     I = cv2.normalize(I, None, 0, 1.0, cv2.NORM_MINMAX, dtype=cv2.CV_32F)
     # Définir l'élément structurant ici pour crapbulsar-optical.tif
     #S = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (6, 6))

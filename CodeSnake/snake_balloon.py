@@ -1,6 +1,7 @@
 import numpy as np
 from matplotlib import pyplot as plt
 from scipy import sparse as sp
+from scipy.interpolate import CubicSpline
 import cv2
 import triangle as tr
 
@@ -53,7 +54,7 @@ def snake_balloon_2D(I_opened,I, balloon_param, param):
     grad_x, grad_y = np.gradient(norm_grad)
     IMAGES.append(norm_grad)
 
-    A = update_A(K, alpha, beta, dt)
+    New_K=K
 
     x = np.transpose(x)
     y = np.transpose(y)
@@ -61,6 +62,7 @@ def snake_balloon_2D(I_opened,I, balloon_param, param):
     CONTOUR_IMAGE = []
 
     for i in range(iteration):
+        A = update_A(New_K, alpha, beta, dt)
         ti_more_x = np.roll(x, - 1)
         ti_minus_x = np.roll(x, 1)
         ti_more_y = np.roll(y, - 1)
@@ -83,7 +85,37 @@ def snake_balloon_2D(I_opened,I, balloon_param, param):
         cc = np.zeros((K, 1, 2))
         cc[:,0,0] = y
         cc[:,0,1] = x 
-        c.append(cc.astype(int))
+        c.append(cc.astype(int))  
+
+        #Calcul de la distance des points à chaque itération
+        dist_l=np.sqrt((x-ti_more_x)**2 + (y - ti_more_y)**2)
+        #Liste nouveau point d'interpolation 
+        point_interpol_x=[]
+        point_interpol_y=[]  
+
+        for i in range(len(dist_l)):
+            if dist_l[i]>10:
+                x_cub = [x[i-2], x[i-1], x[i], x[i+1]]
+                y_cub = [y[i-2], y[i-1], y[i], y[i+1]]
+
+                # Créer l'interpolation cubique
+                cs = CubicSpline(x_cub, y_cub)
+                # Calculer l'ordonnée du nouveau point
+                x_new=(x[i]+x[i+1])/2
+                y_new = cs(x_new)
+                point_interpol_x.append([x_new,i])
+                point_interpol_y.append([y_new,i])
+
+            elif dist_l[i]<5:
+                np.delete(x,i)
+                np.delete(y,i)
+
+        for i in range(len(point_interpol_x)):
+            x.insert(point_interpol_x[1],point_interpol_x[0])
+            x.insert(point_interpol_y[1],point_interpol_y[0])
+
+
+        New_K=len(x)
 
         
         if i % 100 == 0:
