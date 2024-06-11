@@ -19,9 +19,9 @@ def sphere(balloon_param):
     dr = np.linspace(0, 2*np.pi, K)
     for i in range(size_grid):
         for j in range(size_grid):
-            x[i, j] = x0 + rho*np.cos(theta)*np.cos(phi)
-            y[i, j] = y0 + rho*np.sin(theta)*np.cos(phi)
-            z[i, j] = z0 + rho*np.sin(phi)
+            x[i, j] = x0 + rho*np.cos(dt)*np.cos(dr)
+            y[i, j] = y0 + rho*np.sin(dt)*np.cos(dr)
+            z[i, j] = z0 + rho*np.sin(dr)
     return (x, y, z)
 
 def check_balloon(name):
