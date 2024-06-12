@@ -12,7 +12,7 @@ def update(frame):
 
 def display(I, name):
     ani = animation.FuncAnimation(fig, update, frames=I, repeat=False)
-    ani.save("./CodeSnake/Video/" + name + ".mp4", writer='ffmpeg')
+    ani.save("./CodeSnake/Video/" + name + ".png", writer='ffmpeg')
     plt.show()
 
 def plot_cube(I):

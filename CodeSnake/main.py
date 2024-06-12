@@ -12,13 +12,13 @@ if __name__ == "__main__":
     balloon_param = ["circle", 700, len(I)/2 + 5, len(I[0])/2 + 5, 5]
     balloon_param_3D = ["sphere", 100, 0, 0, 0, 10]
     param = {
-        "alpha": 0.015,
-        "beta": 0.00000001,
+        "alpha": 0.15,
+        "beta": 0.001,
         "gamma": 50,
         "kappa": -0.006,
         "sigma": 7,
         "dt": 0.1,
-        "iteration" : 1001
+        "iteration" : 3001
     }
     IMAGES, CONTOUR_IMAGE = snake_balloon_2D(I, balloon_param, param)
     # snake_balloon_3D(I_3D, balloon_param_3D, param)
