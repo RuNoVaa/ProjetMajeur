@@ -3,6 +3,7 @@ from matplotlib import pyplot as plt
 import scipy.ndimage
 import cv2
 
+from mesh_parametric import *
 from balloon import *
 
 
@@ -125,26 +126,28 @@ def snake_balloon_3D(I, balloon_param, param):
     CONTOUR_IMAGE = []
 
     for i in range(iteration):
-        x, y, z = 
+        n_x, n_y, n_z = calcul_normal(x,y,z)
 
-        xi = np.dot(A, x + dt*gamma*(grad_x[x.astype(int),y.astype(int)] + kappa*n_x))
-        yi = np.dot(A, y + dt*gamma*(grad_y[x.astype(int),y.astype(int)] + kappa*n_y))
+        xi = np.dot(A, x + dt*gamma*(grad_x[x.astype(int), y.astype(int), z.astype(int)] + kappa*n_x))
+        yi = np.dot(A, y + dt*gamma*(grad_y[x.astype(int), y.astype(int), z.astype(int)] + kappa*n_y))
+        zi = np.dot(A, z + dt*gamma*(grad_z[x.astype(int), y.astype(int), z.astype(int)] + kappa*n_z))
 
         x = xi
         y = yi
+        z = zi
 
-        c = list()
-        cc = np.zeros((K, 1, 2))
-        cc[:,0,0] = y
-        cc[:,0,1] = x 
-        c.append(cc.astype(int))
+        # c = list()
+        # cc = np.zeros((K, 1, 2))
+        # cc[:,0,0] = y
+        # cc[:,0,1] = x 
+        # c.append(cc.astype(int))
 
         
-        if i % 100 == 0:
-            I_c = cv2.drawContours(image=cv2.cvtColor(I, cv2.COLOR_GRAY2BGR), contours=c, contourIdx=-1, color=(255, 0, 0), thickness=2, lineType=cv2.LINE_AA)
-            I_c = cv2.putText(I_c, f"Iteration: {i}", (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 0, 0), 1, cv2.LINE_AA)
-            I_c = cv2.putText(I_c, f"alpha: {alpha}", (0, 9*int(scale_x)), cv2.FONT_HERSHEY_SIMPLEX, 4/np.sqrt(scale_x*scale_y), (255, 0, 0), 1, cv2.LINE_AA)
+        # if i % 100 == 0:
+        #     I_c = cv2.drawContours(image=cv2.cvtColor(I, cv2.COLOR_GRAY2BGR), contours=c, contourIdx=-1, color=(255, 0, 0), thickness=2, lineType=cv2.LINE_AA)
+        #     I_c = cv2.putText(I_c, f"Iteration: {i}", (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 0, 0), 1, cv2.LINE_AA)
+        #     I_c = cv2.putText(I_c, f"alpha: {alpha}", (0, 9*int(scale_x)), cv2.FONT_HERSHEY_SIMPLEX, 4/np.sqrt(scale_x*scale_y), (255, 0, 0), 1, cv2.LINE_AA)
 
-            CONTOUR_IMAGE.append(I_c)
+        #     CONTOUR_IMAGE.append(I_c)
 
     return IMAGES, CONTOUR_IMAGE

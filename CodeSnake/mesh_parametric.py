@@ -36,12 +36,25 @@ def normal(t_u, t_v):
     n_z = t_u[0]*t_v[1] - t_u[1]*t_v[0]
 
     norm = np.sqrt(n_x**2 + n_y**2 + n_z**2)
-
-    n_x /= norm
-    n_y /= norm
-    n_z /= norm
+    
+    if n_x != 0:
+        n_x /= norm
+    if n_y != 0:
+        n_y /= norm
+    if n_z != 0:
+        n_z /= norm
 
     return n_x, n_y, n_z
+
+def calcul_normal(x, y, z):
+    t_u_x, t_u_y, t_u_z = diff_u(x, y, z)
+    t_v_x, t_v_y, t_v_z = diff_v(x, y, z)
+    t_u = (t_u_x, t_u_y, t_u_z)
+    t_v = (t_u_x, t_u_y, t_u_z)
+
+    n_x, n_y, n_z = normal(t_u, t_v)
+
+    return (n_x, n_y, n_z)
 
 
 

@@ -16,7 +16,6 @@ def display(I):
 
 def plot_cube(I):
     # Create a figure and a 3D axis
-    fig = plt.figure()
     ax = fig.add_subplot(111, projection='3d')
     
     # Get the indices of the points in the array that have value 1
