@@ -83,8 +83,6 @@ def snake_balloon_2D(I, balloon_param, param):
         if i % 100 == 0:
             I_c = cv2.drawContours(image=cv2.cvtColor(I, cv2.COLOR_GRAY2BGR), contours=c, contourIdx=-1, color=(255, 0, 0), thickness=2, lineType=cv2.LINE_AA)
             I_c = cv2.putText(I_c, f"Iteration: {i}", (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 0, 0), 1, cv2.LINE_AA)
-            I_c = cv2.putText(I_c, f"alpha: {alpha}", (0, 9*int(scale_x)), cv2.FONT_HERSHEY_SIMPLEX, 4/np.sqrt(scale_x*scale_y), (255, 0, 0), 1, cv2.LINE_AA)
-
             CONTOUR_IMAGE.append(I_c)
 
     return IMAGES, CONTOUR_IMAGE
