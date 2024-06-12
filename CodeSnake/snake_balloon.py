@@ -88,7 +88,7 @@ def snake_balloon_2D(I_opened,I, balloon_param, param):
         cc[:,0,1] = x 
         c.append(cc.astype(int))  
 
-        if i%100==0:
+        if i%200==0:
             #Calcul de la distance des points à chaque itération
             dist_l=np.sqrt((x-ti_more_x)**2 + (y - ti_more_y)**2)
 
