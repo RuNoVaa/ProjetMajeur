@@ -42,12 +42,12 @@ if __name__ == "__main__":
         #"kappa": -0.0003,
         #Un beta très faible pour que le cercle puisse prendre un creu, un alpha peu élevé pour laisser l'élastique, un gamma élevé car on doit s'arrêter sur la zone de fort gradient et kappa adapté
 
-        "alpha": 1,
-        "beta": 0.00000000000001,
-        "gamma": 2000,
-        "kappa": -0.003745,
+        "alpha": 100,
+        "beta": 0.00000000000000001,
+        "gamma": 1800,
+        "kappa": -0.011,
         "dt": 0.1,
-        "iteration" : 201
+        "iteration" : 1051
     }
     IMAGES, CONTOUR_IMAGE = snake_balloon_2D(E,I, balloon_param, param)
     display(CONTOUR_IMAGE)

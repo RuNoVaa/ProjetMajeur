@@ -88,45 +88,46 @@ def snake_balloon_2D(I_opened,I, balloon_param, param):
         cc[:,0,1] = x 
         c.append(cc.astype(int))  
 
-        #Calcul de la distance des points à chaque itération
-        dist_l=np.sqrt((x-ti_more_x)**2 + (y - ti_more_y)**2)
+        if i%100==0:
+            #Calcul de la distance des points à chaque itération
+            dist_l=np.sqrt((x-ti_more_x)**2 + (y - ti_more_y)**2)
 
-        point_interpol_x=np.array([])
-        point_interpol_y=np.array([])
+            point_interpol_x=np.array([])
+            point_interpol_y=np.array([])
 
-        #Interpolation linéaire
-        for j in range(len(dist_l)-1):
-            #Liste nouveau point d'interpolation 
-            if dist_l[j]>8:
-                #On ajoute le point
-                point_interpol_x=np.append(point_interpol_x,x[j])
-                point_interpol_y=np.append(point_interpol_y,y[j])
+            #Interpolation linéaire
+            for j in range(len(dist_l)-1):
+                #Liste nouveau point d'interpolation 
+                if dist_l[j]>7:
+                    #On ajoute le point
+                    point_interpol_x=np.append(point_interpol_x,x[j])
+                    point_interpol_y=np.append(point_interpol_y,y[j])
 
-                # Calculer l'abscisse et l'ordonnée du nouveau point
-                x_new=(x[j]+x[j+1])/2
-                y_new = (y[j]+y[j+1])/2
+                    # Calculer l'abscisse et l'ordonnée du nouveau point
+                    x_new=(x[j]+x[j+1])/2
+                    y_new = (y[j]+y[j+1])/2
 
-                #On ajoute le nouveau
-                point_interpol_x=np.append(point_interpol_x,x_new)
-                point_interpol_y=np.append(point_interpol_y,y_new)
+                    #On ajoute le nouveau
+                    point_interpol_x=np.append(point_interpol_x,x_new)
+                    point_interpol_y=np.append(point_interpol_y,y_new)
 
-            elif dist_l[j]<0.1:
-                pass
+                elif dist_l[j]<0.1:
+                    pass
 
-            else:
-                #On ajoute le point
-                point_interpol_x=np.append(point_interpol_x,x[j])
-                point_interpol_y=np.append(point_interpol_y,y[j])
+                else:
+                    #On ajoute le point
+                    point_interpol_x=np.append(point_interpol_x,x[j])
+                    point_interpol_y=np.append(point_interpol_y,y[j])
 
-        #Mise à jour des nouveaux points
-        x=point_interpol_x
-        y=point_interpol_y
-        print("taille de x:",x.size)
-        #Mise à jour du nombre de point
-        New_K=x.size
+            #Mise à jour des nouveaux points
+            x=point_interpol_x
+            y=point_interpol_y
+            print("taille de x:",x.size)
+            #Mise à jour du nombre de point
+            New_K=x.size
 
         
-        if i % 100 == 0:
+        if i % 50 == 0:
             I_c = cv2.drawContours(image=cv2.cvtColor(I, cv2.COLOR_GRAY2BGR), contours=c, contourIdx=-1, color=(255, 0, 0), thickness=2, lineType=cv2.LINE_AA)
             I_c = cv2.putText(I_c, f"Iteration: {i}", (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 0, 0), 1, cv2.LINE_AA)
             CONTOUR_IMAGE.append(I_c)
