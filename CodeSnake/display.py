@@ -10,8 +10,9 @@ def update(frame):
     ax.imshow(frame)
     ax.axis('off')
 
-def display(I):
+def display(I, name):
     ani = animation.FuncAnimation(fig, update, frames=I, repeat=False)
+    ani.save("./CodeSnake/Video/" + name + ".mp4", writer='ffmpeg')
     plt.show()
 
 def plot_cube(I):
