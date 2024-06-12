@@ -8,7 +8,7 @@ def update(frame):
     ax.imshow(frame)
     ax.axis('off')
 
-def display(I):
+def display(I, name):
     ani = animation.FuncAnimation(fig, update, frames=I, repeat=False)
-    ani.save("./CodeSnake/Video/interpolation.mp4",writer='ffmpeg')
+    ani.save("./CodeSnake/Video/" + name + ".png",writer='ffmpeg')
     plt.show()
