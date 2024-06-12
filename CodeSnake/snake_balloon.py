@@ -3,6 +3,7 @@ from matplotlib import pyplot as plt
 from scipy import sparse as sp
 from scipy.interpolate import CubicSpline
 import cv2
+import time
 import triangle as tr
 
 from balloon import *
@@ -82,43 +83,50 @@ def snake_balloon_2D(I_opened,I, balloon_param, param):
         y = yi
 
         c = list()
-        cc = np.zeros((K, 1, 2))
+        cc = np.zeros((New_K, 1, 2))
         cc[:,0,0] = y
         cc[:,0,1] = x 
         c.append(cc.astype(int))  
 
         #Calcul de la distance des points à chaque itération
         dist_l=np.sqrt((x-ti_more_x)**2 + (y - ti_more_y)**2)
-        #Liste nouveau point d'interpolation 
-        point_interpol_x=[]
-        point_interpol_y=[]  
 
-        for i in range(len(dist_l)):
-            if dist_l[i]>10:
-                x_cub = [x[i-2], x[i-1], x[i], x[i+1]]
-                y_cub = [y[i-2], y[i-1], y[i], y[i+1]]
+        point_interpol_x=np.array([])
+        point_interpol_y=np.array([])
 
-                # Créer l'interpolation cubique
-                cs = CubicSpline(x_cub, y_cub)
-                # Calculer l'ordonnée du nouveau point
-                x_new=(x[i]+x[i+1])/2
-                y_new = cs(x_new)
-                point_interpol_x.append([x_new,i])
-                point_interpol_y.append([y_new,i])
+        #Interpolation linéaire
+        for j in range(len(dist_l)-1):
+            #Liste nouveau point d'interpolation 
+            if dist_l[j]>8:
+                #On ajoute le point
+                point_interpol_x=np.append(point_interpol_x,x[j])
+                point_interpol_y=np.append(point_interpol_y,y[j])
 
-            elif dist_l[i]<5:
-                np.delete(x,i)
-                np.delete(y,i)
+                # Calculer l'abscisse et l'ordonnée du nouveau point
+                x_new=(x[j]+x[j+1])/2
+                y_new = (y[j]+y[j+1])/2
 
-        for i in range(len(point_interpol_x)):
-            x.insert(point_interpol_x[1],point_interpol_x[0])
-            x.insert(point_interpol_y[1],point_interpol_y[0])
+                #On ajoute le nouveau
+                point_interpol_x=np.append(point_interpol_x,x_new)
+                point_interpol_y=np.append(point_interpol_y,y_new)
 
+            elif dist_l[j]<0.1:
+                pass
 
-        New_K=len(x)
+            else:
+                #On ajoute le point
+                point_interpol_x=np.append(point_interpol_x,x[j])
+                point_interpol_y=np.append(point_interpol_y,y[j])
+
+        #Mise à jour des nouveaux points
+        x=point_interpol_x
+        y=point_interpol_y
+        print("taille de x:",x.size)
+        #Mise à jour du nombre de point
+        New_K=x.size
 
         
-        if i % 100 == 0:
+        if i % 10 == 0:
             I_c = cv2.drawContours(image=cv2.cvtColor(I, cv2.COLOR_GRAY2BGR), contours=c, contourIdx=-1, color=(255, 0, 0), thickness=2, lineType=cv2.LINE_AA)
             I_c = cv2.putText(I_c, f"Iteration: {i}", (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 0, 0), 1, cv2.LINE_AA)
             I_c = cv2.putText(I_c, f"alpha: {alpha}", (0, 9*int(scale_x)), cv2.FONT_HERSHEY_SIMPLEX, 4/np.sqrt(scale_x*scale_y), (255, 0, 0), 1, cv2.LINE_AA)

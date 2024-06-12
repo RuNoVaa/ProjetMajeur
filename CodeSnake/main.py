@@ -14,7 +14,7 @@ if __name__ == "__main__":
     # Appliquer l'opération d'ouverture
     E=cv2.morphologyEx(I, cv2.MORPH_OPEN, S)
 
-    balloon_param = ["circle", 100, len(I)/2, len(I[0])/2, 10]
+    balloon_param = ["circle", 400, len(I)/2, len(I[0])/2, 20]
     param = {
         #Crabpulsar
         #Appliquer l'opération d'ouverture, nécessaire pour le traitement d'image
@@ -45,9 +45,9 @@ if __name__ == "__main__":
         "alpha": 1,
         "beta": 0.00000000000001,
         "gamma": 2000,
-        "kappa": -0.004,
+        "kappa": -0.003745,
         "dt": 0.1,
-        "iteration" : 2401
+        "iteration" : 201
     }
     IMAGES, CONTOUR_IMAGE = snake_balloon_2D(E,I, balloon_param, param)
     display(CONTOUR_IMAGE)
