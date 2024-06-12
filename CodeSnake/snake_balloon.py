@@ -40,14 +40,13 @@ def snake_balloon_2D(I_opened,I, balloon_param, param):
         return "Ce balloon n'existe pas"
     balloon = BALLOON_NAME[balloon_name]
 
-    x, y = balloon(balloon_param)
-
     # Définir les points du triangle
     pt1 = (100, 200)  # Premier sommet
     pt2 = (245, 295)  # Deuxième sommet
     pt3 = (250, 100)  # Troisième sommet
 
     #x, y=tr.triangle(pt1,pt2,pt3,K)
+    x, y = balloon(balloon_param)
     
     grad_I_x, grad_I_y = np.gradient(I_opened)
     norm_grad = grad_I_x**2 + grad_I_y**2
@@ -113,7 +112,7 @@ def snake_balloon_2D(I_opened,I, balloon_param, param):
                     point_interpol_x=np.append(point_interpol_x,x_new)
                     point_interpol_y=np.append(point_interpol_y,y_new)
 
-                elif dist_l[j]<1:
+                elif dist_l[j]<0.1:
                     pass
 
                 else:
@@ -129,7 +128,7 @@ def snake_balloon_2D(I_opened,I, balloon_param, param):
             New_K=x.size
 
         
-        if i % 50 == 0:
+        if i % 100 == 0:
             I_c = cv2.drawContours(image=cv2.cvtColor(I, cv2.COLOR_GRAY2BGR), contours=c, contourIdx=-1, color=(255, 0, 0), thickness=2, lineType=cv2.LINE_AA)
             I_c = cv2.putText(I_c, f"Iteration: {i}", (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 0, 0), 1, cv2.LINE_AA)
             CONTOUR_IMAGE.append(I_c)
