@@ -1,7 +1,10 @@
 import numpy as np
 from matplotlib import pyplot as plt
-import scipy.ndimage
+from scipy import sparse as sp
+from scipy.interpolate import CubicSpline
 import cv2
+import time
+import triangle as tr
 
 from balloon import *
 
@@ -19,17 +22,16 @@ def update_A(K, alpha, beta, dt):
     return A
 
 
-def snake_balloon_2D(I, balloon_param, param):
-    IMAGES = [I]
+def snake_balloon_2D(I_opened,I, balloon_param, param):
+    IMAGES = [I_opened]
     scale_x, scale_y = len(I)/10, len(I[0])/10
-  
+    print(scale_x, scale_y)
 
     iteration = param['iteration']
     alpha = param["alpha"]
     beta = param["beta"]
     gamma = param["gamma"]
     kappa = param["kappa"]
-    sigma = param["sigma"]
     dt = param["dt"]
     K = balloon_param[1]
 
@@ -39,15 +41,21 @@ def snake_balloon_2D(I, balloon_param, param):
     balloon = BALLOON_NAME[balloon_name]
 
     x, y = balloon(balloon_param)
-    x_init, y_init = x, y
 
-    grad_I_x, grad_I_y = np.gradient(I)
+    # Définir les points du triangle
+    pt1 = (100, 200)  # Premier sommet
+    pt2 = (245, 295)  # Deuxième sommet
+    pt3 = (250, 100)  # Troisième sommet
+
+    #x, y=tr.triangle(pt1,pt2,pt3,K)
+    
+    grad_I_x, grad_I_y = np.gradient(I_opened)
     norm_grad = grad_I_x**2 + grad_I_y**2
-    norm_grad = cv2.GaussianBlur(norm_grad, (sigma, sigma), 0)
+    norm_grad = cv2.GaussianBlur(norm_grad, (11,11), 0)
     grad_x, grad_y = np.gradient(norm_grad)
     IMAGES.append(norm_grad)
 
-    A = update_A(K, alpha, beta, dt)
+    New_K=K
 
     x = np.transpose(x)
     y = np.transpose(y)
@@ -55,6 +63,7 @@ def snake_balloon_2D(I, balloon_param, param):
     CONTOUR_IMAGE = []
 
     for i in range(iteration):
+        A = update_A(New_K, alpha, beta, dt)
         ti_more_x = np.roll(x, - 1)
         ti_minus_x = np.roll(x, 1)
         ti_more_y = np.roll(y, - 1)
@@ -74,10 +83,47 @@ def snake_balloon_2D(I, balloon_param, param):
         y = yi
 
         c = list()
-        cc = np.zeros((K, 1, 2))
+        cc = np.zeros((New_K, 1, 2))
         cc[:,0,0] = y
         cc[:,0,1] = x 
-        c.append(cc.astype(int))
+        c.append(cc.astype(int))  
+
+        #Calcul de la distance des points à chaque itération
+        dist_l=np.sqrt((x-ti_more_x)**2 + (y - ti_more_y)**2)
+
+        point_interpol_x=np.array([])
+        point_interpol_y=np.array([])
+
+        #Interpolation linéaire
+        for j in range(len(dist_l)-1):
+            #Liste nouveau point d'interpolation 
+            if dist_l[j]>8:
+                #On ajoute le point
+                point_interpol_x=np.append(point_interpol_x,x[j])
+                point_interpol_y=np.append(point_interpol_y,y[j])
+
+                # Calculer l'abscisse et l'ordonnée du nouveau point
+                x_new=(x[j]+x[j+1])/2
+                y_new = (y[j]+y[j+1])/2
+
+                #On ajoute le nouveau
+                point_interpol_x=np.append(point_interpol_x,x_new)
+                point_interpol_y=np.append(point_interpol_y,y_new)
+
+            elif dist_l[j]<0.1:
+                pass
+
+            else:
+                #On ajoute le point
+                point_interpol_x=np.append(point_interpol_x,x[j])
+                point_interpol_y=np.append(point_interpol_y,y[j])
+
+        #Mise à jour des nouveaux points
+        x=point_interpol_x
+        y=point_interpol_y
+        print("taille de x:",x.size)
+        #Mise à jour du nombre de point
+        New_K=x.size
 
         
         if i % 100 == 0:
