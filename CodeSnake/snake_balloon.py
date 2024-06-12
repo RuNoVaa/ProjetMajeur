@@ -51,7 +51,8 @@ def snake_balloon_2D(I_opened,I, balloon_param, param):
     
     grad_I_x, grad_I_y = np.gradient(I_opened)
     norm_grad = grad_I_x**2 + grad_I_y**2
-    norm_grad = cv2.GaussianBlur(norm_grad, (11,11), 0)
+    #norm_grad = cv2.GaussianBlur(norm_grad, (11,11), 0)
+    norm_grad = cv2.GaussianBlur(norm_grad, (7,7), 0)
     grad_x, grad_y = np.gradient(norm_grad)
     IMAGES.append(norm_grad)
 
@@ -97,8 +98,9 @@ def snake_balloon_2D(I_opened,I, balloon_param, param):
 
             #Interpolation linéaire
             for j in range(len(dist_l)-1):
+                
                 #Liste nouveau point d'interpolation 
-                if dist_l[j]>7:
+                if dist_l[j]>2.5:
                     #On ajoute le point
                     point_interpol_x=np.append(point_interpol_x,x[j])
                     point_interpol_y=np.append(point_interpol_y,y[j])
@@ -111,7 +113,7 @@ def snake_balloon_2D(I_opened,I, balloon_param, param):
                     point_interpol_x=np.append(point_interpol_x,x_new)
                     point_interpol_y=np.append(point_interpol_y,y_new)
 
-                elif dist_l[j]<0.1:
+                elif dist_l[j]<1:
                     pass
 
                 else:

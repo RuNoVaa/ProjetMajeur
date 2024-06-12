@@ -10,4 +10,5 @@ def update(frame):
 
 def display(I):
     ani = animation.FuncAnimation(fig, update, frames=I, repeat=False)
+    ani.save("./CodeSnake/Video/interpolation.mp4",writer='ffmpeg')
     plt.show()
